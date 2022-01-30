@@ -107,9 +107,9 @@ if ($_SESSION['login']) {
         <!-- ============================================================== -->
         <!-- Topbar header - style you can find in pages.scss -->
         <!-- ============================================================== -->
-        <header class="topbar" data-navbarbg="skin5" style="background-color: #38ef7d;">
-            <nav class="navbar top-navbar navbar-expand-md" style="background-color: #38ef7d;">
-                <div class="navbar-header" data-logobg="skin6" style="background-color: #38ef7d;">
+        <header class="topbar" data-navbarbg="skin5" style="background-color: rgba(239,142,56,1) 100%;">
+            <nav class="navbar top-navbar navbar-expand-md" style="background:  rgba(239,142,56,1) 100%;">
+                <div class="navbar-header" data-logobg="skin6" style="background:  rgba(239,142,56,1) 100%;">
                     <!-- ============================================================== -->
                     <!-- Logo -->
                     <!-- ============================================================== -->
@@ -163,7 +163,7 @@ if ($_SESSION['login']) {
                         <!-- User profile and search -->
                         <!-- ============================================================== -->
                         <li>
-                            <a class="profile-pic" href="index.php?q=logout">
+                            <a class="profile-pic" href="index.php?q=logout" onclick="keluar(event);">
                                 <span class="text-white font-medium">Logout</span> <i class="fa fa-power-off"></i></a>
                         </li>
                         <!-- ============================================================== -->
@@ -342,6 +342,38 @@ if ($_SESSION['login']) {
                         window.location = urlToRedirect;
                     } else if (willDelete.isDenied) {
                         Swal.fire('Data Aman!', '', 'info')
+                    }
+                });
+        }
+
+        function keluar(ev) {
+            ev.preventDefault();
+            var urlToRedirect = ev.currentTarget.getAttribute('href'); //use currentTarget because the click may be on the nested i tag and not a tag causing the href to be empty
+            console.log(urlToRedirect); // verify if this is the right URL
+            Swal.fire({
+                    title: "Kamu yakin ingin keluar?",
+                    icon: "warning",
+                    showDenyButton: true,
+                    confirmButtonText: `Ya`,
+                    dangerMode: true,
+                    denyButtonText: `Tidak`,
+
+                    allowOutsideClick: () => {
+                        const popup = Swal.getPopup()
+                        popup.classList.remove('swal2-show')
+                        setTimeout(() => {
+                            popup.classList.add('animate__animated', 'animate__headShake')
+                        })
+                        setTimeout(() => {
+                            popup.classList.remove('animate__animated', 'animate__headShake')
+                        }, 500)
+                        return false
+                    }
+                })
+                .then((willQuit) => {
+                    // redirect with javascript here as per your logic after showing the alert using the urlToRedirect value
+                    if (willQuit.isConfirmed) {
+                        window.location = urlToRedirect;
                     }
                 });
         }

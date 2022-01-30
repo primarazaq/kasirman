@@ -76,9 +76,9 @@ if ($_SESSION['login']) {
                 $subtotal = $pembelian * $cart[$i]['harga'];
                 $data_transaksi = $detail_transaksi->store($no_struk, $id_menu, $pembelian, $subtotal);
             }
-            echo "Pesan Berhasil";
+            header("location:?i=berhasil");
         } else {
-            echo "Gagal";
+            header("location:?i=gagal");
         }
     }
 } else {
@@ -117,8 +117,8 @@ if ($_SESSION['login']) {
 
         .cart {
             border-radius: 20px;
-            background: rgb(17, 153, 142);
-            background: linear-gradient(31deg, rgba(17, 153, 142, 1) 0%, rgba(56, 239, 125, 1) 100%);
+            background: rgb(253, 200, 48);
+            background: linear-gradient(31deg, rgba(253, 200, 48, 1) 0%, rgba(243, 115, 53, 1) 72%);
             color: #fff;
         }
 
@@ -138,6 +138,26 @@ if ($_SESSION['login']) {
             left: 0;
             width: 100%;
         }
+
+        .colored-toast.swal2-icon-success {
+            background-color: #a5dc86 !important;
+        }
+
+        .colored-toast.swal2-icon-error {
+            background-color: #f27474 !important;
+        }
+
+        .colored-toast .swal2-title {
+            color: white;
+        }
+
+        .colored-toast .swal2-close {
+            color: white;
+        }
+
+        .colored-toast .swal2-content {
+            color: white;
+        }
     </style>
 </head>
 
@@ -147,6 +167,7 @@ if ($_SESSION['login']) {
 
 
         <?php
+
         if (isset($_GET['p']) == 'sukses') {
             //toast login sukses
             echo "<script> const Toast = Swal.mixin({
@@ -169,6 +190,7 @@ if ($_SESSION['login']) {
                 </script>
             ";
         }
+
         ?>
 
         <div class="row">
@@ -201,7 +223,7 @@ if ($_SESSION['login']) {
                     </div>
 
                 </div>
-                <div class="col-md-4">
+                <div class="col-sm-3" style="position: fixed; margin-left:900px;">
                     <?php include 'assets/component/cart.php' ?>
                 </div>
             </div>
@@ -219,6 +241,38 @@ if ($_SESSION['login']) {
                 type: 'danger',
                 confirmButtonClass: "btn-danger"
             })
+        }
+
+        function keluar(ev) {
+            ev.preventDefault();
+            var urlToRedirect = ev.currentTarget.getAttribute('href'); //use currentTarget because the click may be on the nested i tag and not a tag causing the href to be empty
+            console.log(urlToRedirect); // verify if this is the right URL
+            Swal.fire({
+                    title: "Kamu yakin ingin keluar?",
+                    icon: "warning",
+                    showDenyButton: true,
+                    confirmButtonText: `Ya`,
+                    dangerMode: true,
+                    denyButtonText: `Tidak`,
+
+                    allowOutsideClick: () => {
+                        const popup = Swal.getPopup()
+                        popup.classList.remove('swal2-show')
+                        setTimeout(() => {
+                            popup.classList.add('animate__animated', 'animate__headShake')
+                        })
+                        setTimeout(() => {
+                            popup.classList.remove('animate__animated', 'animate__headShake')
+                        }, 500)
+                        return false
+                    }
+                })
+                .then((willQuit) => {
+                    // redirect with javascript here as per your logic after showing the alert using the urlToRedirect value
+                    if (willQuit.isConfirmed) {
+                        window.location = urlToRedirect;
+                    }
+                });
         }
     </script>
 </body>
